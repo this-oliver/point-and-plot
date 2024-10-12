@@ -5,7 +5,7 @@
 ## Getting started
 
 > [!TIP]
-> For the best experience, visit the website [https://point-and-plot.oliverrr.net](https://point-and-plot.oliverrr.net) to skip the setup process.
+> For the best experience, visit the website [point-and-plot.oliverrr.net](https://point-and-plot.oliverrr.net) to skip the setup process.
 
 1. Clone the repository - `git clone https://github.com/this-oliver/point-and-plot.git`.
 2. Click on the `index.html` file and copy its path.
