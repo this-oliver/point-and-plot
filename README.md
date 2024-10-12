@@ -1,6 +1,6 @@
 # Point-and-plot
 
-`point-and-plot` is a tool that lets you generate accurate `x` and `y` coordinates on top of an image (png, jpg) in a quick and simple manner that saves you hours of trial and error to get the perfect result.
+`Point-and-plot` is a tool that generates quick and accurate `x` and `y` coordinates for SVG elements to save you hours of trial and error. All you have to do is upload an image and click on the areas you want to get the coordinates for.
 
 ## Getting started
 
