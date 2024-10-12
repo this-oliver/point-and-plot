@@ -31,6 +31,44 @@ function addCoords(id, x, y) {
 }
 
 /**
+ * Exports the coordinates to the web console and downloads a JSON file
+ * containing the coordinates.
+ *
+ * @returns {void}
+ */
+function exportCoords() {
+	console.log(coords);
+
+	// prompt user to download file
+	const promptMessage =
+		"Coordinates have been logged to the console. Do you want to download the coordinates as a JSON file?";
+	if (confirm(promptMessage)) {
+		// download file
+		const data = JSON.stringify(coords, null, 2);
+		const blob = new Blob([data], { type: "application/json" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "point-and-click-coordinates.json";
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+	}
+}
+
+/**
+ * Resets the coordinates and counter.
+ *
+ * @returns {void}
+ */
+function resetCoords() {
+	coords = [];
+	counter = 1;
+	coordGroup.innerHTML = "";
+	document.getElementById("count").textContent = counter;
+}
+
+/**
  * This function creates a circle and text element on the SVG canvas
  * with the given id, x, and y coordinates to represent a pointer.
  *
@@ -107,32 +145,6 @@ function processCoords(e) {
 }
 
 /**
- * Exports the coordinates to the web console and downloads a JSON file
- * containing the coordinates.
- *
- * @returns {void}
- */
-function exportCoords() {
-	console.log(coords);
-
-	// prompt user to download file
-	const promptMessage =
-		"Coordinates have been logged to the console. Do you want to download the coordinates as a JSON file?";
-	if (confirm(promptMessage)) {
-		// download file
-		const data = JSON.stringify(coords, null, 2);
-		const blob = new Blob([data], { type: "application/json" });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = "point-and-click-coordinates.json";
-		document.body.appendChild(a);
-		a.click();
-		a.remove();
-	}
-}
-
-/**
  * Handles the form submission event by performing the following actions:
  *
  * 1. Creates an image element from the uploaded file and appends it to the SVG group element.
@@ -190,6 +202,7 @@ function handleSubmitButton(e) {
 
 // setup
 exportButton.addEventListener("click", exportCoords);
+resetButton.addEventListener("click", resetCoords);
 form.addEventListener("submit", handleFormSubmit);
 formInput.addEventListener("change", handleSubmitButton);
 svg.addEventListener("click", processCoords);
