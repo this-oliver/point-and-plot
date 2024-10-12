@@ -18,24 +18,35 @@
 					<label for="image-field" class="font-bold">Upload Image</label>
 					<input type="file" id="image-field" accept=".jpg,.jpeg,.png" />
 				</div>
-				<button type="submit" class="p-2 w-full rounded bg-blue-200">
+				<button
+					class="p-2 w-full rounded bg-blue-200 hover:bg-blue-500 disabled:bg-gray-200"
+					type="submit"
+					disabled
+				>
 					Submit
 				</button>
 			</form>
 		</main>
 
 		<main id="canvas" class="hidden grow flex flex-col space-y-4 w-full">
-			<div id="config" class="w-full flex flex-col space-x-4 md:flex-row">
-				<div class="mr-auto">pointer count: <span id="count">1</span></div>
+			<div
+				id="config"
+				class="w-full flex flex-col space-y-4 md:space-x-4 md:flex-row"
+			>
+				<div
+					class="p-2 flex justify-center items-center text-center bg-slate-100 rounded border border-black md:mr-auto md:px-2 md:py-1"
+				>
+					<p>pointer count: <span id="count">1</span></p>
+				</div>
 				<button
 					id="export"
-					class="p-2 bg-blue-200 rounded border-black text-center"
+					class="p-2 bg-blue-200 rounded text-center hover:bg-blue-500"
 				>
 					export
 				</button>
 				<button
 					id="reset"
-					class="p-2 bg-red-200 rounded border-black text-center"
+					class="p-2 bg-red-200 rounded text-center hover:bg-red-500"
 				>
 					reset
 				</button>
@@ -74,6 +85,7 @@
 
 		<script>
 			const form = document.getElementById("image-form");
+			const formInput = form.querySelector("input[type=file]");
 			const svg = document.getElementById("svg");
 			const svgGroup = document.getElementById("svg-group");
 			const coordGroup = document.getElementById("coords");
@@ -223,6 +235,15 @@
 			}
 
 			/**
+			 * Toggles the active state of the submit button based on the presence of a file.
+			 */
+			function handleSubmitButton(e) {
+				const formHasFile = formInput.files.length > 0;
+				const submitButton = form.querySelector("button[type=submit]");
+				submitButton.disabled = !formHasFile;
+			}
+
+			/**
 			 * Logs the coordinates to the console
 			 */
 			function exportCoords() {
@@ -232,6 +253,7 @@
 			// setup
 			exportButton.addEventListener("click", exportCoords);
 			form.addEventListener("submit", handleFormSubmit);
+			formInput.addEventListener("change", handleSubmitButton);
 			svg.addEventListener("click", processCoords);
 		</script>
 	</body>
