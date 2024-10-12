@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SVG Coords</title>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script src="https://cdn.tailwindcss.com"></script>
+	</head>
+	<body class="min-h-svh p-4 flex flex-col space-y-10">
+		<header class="text-xl font-bold">
+			<h1>SVG Coords</h1>
+		</header>
+
+		<main id="canvas-form" class="grow flex justify-center items-center">
+			<form id="image-form" class="flex flex-col space-y-4">
+				<div class="p-4 flex flex-col space-y-4 border border-black">
+					<label for="image-field" class="font-bold">Upload Image</label>
+					<input type="file" id="image-field" accept=".jpg,.jpeg,.png" />
+				</div>
+				<button type="submit" class="p-2 w-full rounded bg-blue-200">
+					Submit
+				</button>
+			</form>
+		</main>
+
+		<main id="canvas" class="hidden grow flex flex-col space-y-4 w-full">
+			<div id="config" class="w-full flex flex-col space-x-4 md:flex-row">
+				<div class="mr-auto">pointer count: <span id="count">1</span></div>
+				<button
+					id="export"
+					class="p-2 bg-blue-200 rounded border-black text-center"
+				>
+					export
+				</button>
+				<button
+					id="reset"
+					class="p-2 bg-red-200 rounded border-black text-center"
+				>
+					reset
+				</button>
+			</div>
+
+			<svg
+				id="svg"
+				class="grow"
+				width="100%"
+				height="100%"
+				viewBox="0 0 1000 1000"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<g id="svg-group"></g>
+			</svg>
+
+			<div id="coords" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+		</main>
+
+		<footer class="p-4">foot</footer>
+
+		<script>
+			const form = document.getElementById("image-form");
+			const svg = document.getElementById("svg");
+			const svgGroup = document.getElementById("svg-group");
+			const coordGroup = document.getElementById("coords");
+			const exportButton = document.getElementById("export");
+			const resetButton = document.getElementById("reset");
+
+			let counter = 1;
+			let coords = [];
+
+			/**
+			 * Adds coordinates to the list and increments the counter.
+			 */
+			function addCoords(id, x, y) {
+				coords.push({ id, x, y });
+
+				const coordsElement = document.createElement("div");
+				coordsElement.classList.add("p-4", "border", "border-black");
+				coordsElement.textContent = `id: ${id}, x: ${x}, y: ${y}`;
+				coordGroup.appendChild(coordsElement);
+
+				counter++;
+				document.getElementById("count").textContent = counter;
+			}
+
+			/**
+			 * This function creates a circle and text element on the SVG canvas
+			 * with the given id, x, and y coordinates to represent a pointer.
+			 *
+			 * @param {number} id - The id of the circle.
+			 * @param {number} x - The x coordinate of the circle.
+			 * @param {number} y - The y coordinate of the circle.
+			 *
+			 * @returns {Object} - The circle and text elements.
+			 */
+			function createPointer(id, x, y) {
+				const DEFAULT_RADIUS = 50;
+				const DEFAULT_TEXT_SIZE = "3em";
+				const DEFAULT_FILL = "red";
+
+				// set config
+				const config = {
+					fill: DEFAULT_FILL,
+					radius: DEFAULT_RADIUS,
+					textSize: DEFAULT_TEXT_SIZE,
+				};
+
+				// create circle element
+				let circle = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"circle"
+				);
+				circle.setAttribute("cx", x);
+				circle.setAttribute("cy", y);
+				circle.setAttribute("r", config.radius);
+				circle.setAttribute("fill", config.fill);
+				circle.setAttribute("id", id);
+
+				// create text element
+				const text = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"text"
+				);
+				text.setAttribute("x", x - 25);
+				text.setAttribute("y", y + 15);
+				text.setAttribute("fill", "white");
+				text.style.fontSize = config.textSize;
+				text.textContent = id;
+
+				return { circle, text };
+			}
+
+			/**
+			 * This function processes the coordinates of a mouse event and performs the following actions:
+			 * 1. Retrieves the x and y coordinates of the mouse event.
+			 * 2. Transforms the coordinates using the inverse of the screen transformation matrix of the map SVG.
+			 * 3. Creates a temporary circle element on the map SVG at the transformed coordinates.
+			 * 4. Waits for 3 seconds and then prompts the user if they want to add the point.
+			 * 4.1. If the user accepts then the coordinate is added, the counter is incremented, and the circle is removed.
+			 * 4.2 If the user cancels then the circle is removed.
+			 *
+			 * @param {MouseEvent} e - The mouse event object.
+			 *
+			 * @returns {void}
+			 */
+			function processCoords(e) {
+				// get points
+				let point = svg.createSVGPoint();
+				point.x = e.clientX;
+				point.y = e.clientY;
+				let position = point.matrixTransform(svg.getScreenCTM().inverse());
+
+				// temporarily add a circle to the map
+				let { circle, text } = createPointer(counter, position.x, position.y);
+				svgGroup.appendChild(circle);
+				svgGroup.appendChild(text);
+
+				// wait 3 seconds and then prompt user if they want to add the point
+				setTimeout(() => {
+					if (confirm(`Add point at ${position.x}, ${position.y}?`)) {
+						addCoords(counter, position.x, position.y);
+					} else {
+						circle.remove();
+					}
+				}, 1000);
+			}
+
+			/**
+			 * Handles the form submission event by performing the following actions:
+			 *
+			 * 1. Creates an image element from the uploaded file and appends it to the SVG group element.
+			 * 2. Updates the viewbox of the SVG element to match the dimensions of the image.
+			 * 3. Hides the form and shows the canvas.
+			 */
+			function handleFormSubmit(e) {
+				e.preventDefault();
+				const form = document.getElementById("image-form");
+				const file = form.querySelector("input[type=file]").files[0];
+				const reader = new FileReader();
+
+				reader.onload = function (e) {
+					const targetImg = new Image();
+					targetImg.src = e.target.result;
+					targetImg.onload = function () {
+						// update svg viewbox
+						svg.setAttribute(
+							"viewBox",
+							`0 0 ${targetImg.width} ${targetImg.height}`
+						);
+
+						// add image element
+						const imageElement = document.createElementNS(
+							"http://www.w3.org/2000/svg",
+							"image"
+						);
+						imageElement.setAttribute("href", targetImg.src);
+						imageElement.setAttribute("width", targetImg.width);
+						imageElement.setAttribute("height", targetImg.height);
+						svgGroup.appendChild(imageElement);
+
+						// show canvas and hide form
+						document.getElementById("canvas-form").classList.add("hidden");
+						document.getElementById("canvas").classList.remove("hidden");
+					};
+				};
+
+				reader.readAsDataURL(file);
+			}
+
+			/**
+			 * Logs the coordinates to the console
+			 */
+			function exportCoords() {
+				console.log(coords);
+			}
+
+			// setup
+			exportButton.addEventListener("click", exportCoords);
+			form.addEventListener("submit", handleFormSubmit);
+			svg.addEventListener("click", processCoords);
+		</script>
+	</body>
+</html>
