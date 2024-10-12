@@ -11,6 +11,12 @@ let coords = [];
 
 /**
  * Adds coordinates to the list and increments the counter.
+ *
+ * @param {number} id - The id of the coordinate.
+ * @param {number} x - The x coordinate of the point.
+ * @param {number} y - The y coordinate of the point.
+ *
+ * @returns {void}
  */
 function addCoords(id, x, y) {
 	coords.push({ id, x, y });
@@ -101,10 +107,29 @@ function processCoords(e) {
 }
 
 /**
- * Logs the coordinates to the console
+ * Exports the coordinates to the web console and downloads a JSON file
+ * containing the coordinates.
+ *
+ * @returns {void}
  */
 function exportCoords() {
 	console.log(coords);
+
+	// prompt user to download file
+	const promptMessage =
+		"Coordinates have been logged to the console. Do you want to download the coordinates as a JSON file?";
+	if (confirm(promptMessage)) {
+		// download file
+		const data = JSON.stringify(coords, null, 2);
+		const blob = new Blob([data], { type: "application/json" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "point-and-click-coordinates.json";
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+	}
 }
 
 /**
@@ -113,6 +138,10 @@ function exportCoords() {
  * 1. Creates an image element from the uploaded file and appends it to the SVG group element.
  * 2. Updates the viewbox of the SVG element to match the dimensions of the image.
  * 3. Hides the form and shows the canvas.
+ *
+ * @param {Event} e - The form submission event object.
+ *
+ * @returns {void}
  */
 function handleFormSubmit(e) {
 	e.preventDefault();
@@ -148,6 +177,10 @@ function handleFormSubmit(e) {
 
 /**
  * Toggles the active state of the submit button based on the presence of a file.
+ *
+ * @param {Event} e - The change event object.
+ *
+ * @returns {void}
  */
 function handleSubmitButton(e) {
 	const formHasFile = formInput.files.length > 0;
