@@ -103,7 +103,7 @@ function processCoords(e) {
 		} else {
 			circle.remove();
 		}
-	}, 1000);
+	}, 500);
 }
 
 /**
