@@ -12,14 +12,17 @@
 			<p>Click on the image to add points to the SVG canvas.</p>
 		</header>
 
-		<main id="canvas-form" class="grow flex justify-center items-center">
-			<form id="image-form" class="flex flex-col space-y-4">
+		<main id="canvas-form" class="grow px-2 flex justify-center items-center">
+			<form
+				id="image-form"
+				class="w-11/12 mx-auto flex flex-col space-y-4 md:w-full"
+			>
 				<div class="p-4 flex flex-col space-y-4 border border-black">
 					<label for="image-field" class="font-bold">Upload Image</label>
 					<input type="file" id="image-field" accept=".jpg,.jpeg,.png" />
 				</div>
 				<button
-					class="p-2 w-full rounded bg-blue-200 hover:bg-blue-500 disabled:bg-gray-200"
+					class="p-2 w-full rounded bg-blue-500 md:bg-blue-200 hover:bg-blue-500 disabled:bg-gray-200"
 					type="submit"
 					disabled
 				>
