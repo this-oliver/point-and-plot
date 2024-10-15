@@ -98,9 +98,14 @@ function createPointer(id, x, y) {
 	circle.setAttribute("fill", config.fill);
 	circle.setAttribute("id", id);
 
+	// depending on the size of the id, padding might be required
+	// to center the text in the circle
+	const idCharLength = id.toString().length;
+	const padding = idCharLength > 1 ? 0 : 10;
+
 	// create text element
 	const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-	text.setAttribute("x", x - 25);
+	text.setAttribute("x", x - 25 + padding);
 	text.setAttribute("y", y + 15);
 	text.setAttribute("fill", "white");
 	text.style.fontSize = config.textSize;
@@ -190,11 +195,9 @@ function handleFormSubmit(e) {
 /**
  * Toggles the active state of the submit button based on the presence of a file.
  *
- * @param {Event} e - The change event object.
- *
  * @returns {void}
  */
-function handleSubmitButton(e) {
+function handleSubmitButton() {
 	const formHasFile = formInput.files.length > 0;
 	const submitButton = form.querySelector("button[type=submit]");
 	submitButton.disabled = !formHasFile;
