@@ -145,6 +145,7 @@ function processCoords(e) {
 			addCoords(counter, position.x, position.y);
 		} else {
 			circle.remove();
+			text.remove();
 		}
 	}, 500);
 }
