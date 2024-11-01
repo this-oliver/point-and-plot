@@ -90,6 +90,20 @@ function createPointer(id, x, y) {
 		textSize: DEFAULT_TEXT_SIZE,
 	};
 
+	// adjust pointer radius based on image size. the smaller the image, the smaller the pointer
+	if (svgGroup.querySelector("image")) {
+		const imageElement = svgGroup.querySelector("image");
+		const imageWidth = parseInt(imageElement.getAttribute("width"));
+
+		if (imageWidth < 500) {
+			config.radius = 10;
+			config.textSize = "1em";
+		} else if (imageWidth < 1000) {
+			config.radius = 20;
+			config.textSize = "2.5em";
+		}
+	}
+
 	// create circle element
 	let circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 	circle.setAttribute("cx", x);
