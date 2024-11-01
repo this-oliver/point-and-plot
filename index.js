@@ -6,7 +6,7 @@ const coordGroup = document.getElementById("coords");
 const exportButton = document.getElementById("export");
 const resetButton = document.getElementById("reset");
 
-let counter = 1;
+let counter = 0;
 let coords = [];
 
 /**
@@ -63,7 +63,7 @@ function exportCoords() {
  */
 function resetCoords() {
 	coords = [];
-	counter = 1;
+	counter = 0;
 	coordGroup.innerHTML = "";
 	document.getElementById("count").textContent = counter;
 }
@@ -109,7 +109,7 @@ function createPointer(id, x, y) {
 	text.setAttribute("y", y + 15);
 	text.setAttribute("fill", "white");
 	text.style.fontSize = config.textSize;
-	text.textContent = id;
+	text.textContent = id + 1;
 
 	return { circle, text };
 }
