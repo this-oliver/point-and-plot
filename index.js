@@ -161,7 +161,7 @@ function processCoords(e) {
  *
  * @returns {void}
  */
-function handleFormSubmit(e) {
+function handleImageSubmit(e) {
 	e.preventDefault();
 	const form = document.getElementById("image-form");
 	const file = form.querySelector("input[type=file]").files[0];
@@ -175,14 +175,14 @@ function handleFormSubmit(e) {
 			svg.setAttribute("viewBox", `0 0 ${targetImg.width} ${targetImg.height}`);
 
 			// add image element
-			const imageElement = document.createElementNS(
+			const image = document.createElementNS(
 				"http://www.w3.org/2000/svg",
 				"image"
 			);
-			imageElement.setAttribute("href", targetImg.src);
-			imageElement.setAttribute("width", targetImg.width);
-			imageElement.setAttribute("height", targetImg.height);
-			svgGroup.appendChild(imageElement);
+			image.setAttribute("href", targetImg.src);
+			image.setAttribute("width", targetImg.width);
+			image.setAttribute("height", targetImg.height);
+			svgGroup.appendChild(image);
 
 			// show canvas and hide form
 			document.getElementById("canvas-form").classList.add("hidden");
@@ -207,6 +207,6 @@ function handleSubmitButton() {
 // setup
 exportButton.addEventListener("click", exportCoords);
 resetButton.addEventListener("click", resetCoords);
-form.addEventListener("submit", handleFormSubmit);
+form.addEventListener("submit", handleImageSubmit);
 formInput.addEventListener("change", handleSubmitButton);
 svg.addEventListener("click", processCoords);
