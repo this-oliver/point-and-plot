@@ -2,6 +2,8 @@
 
 `Point-and-plot` is a tool that generates quick and accurate `x` and `y` coordinates for SVG elements to save you hours of trial and error. All you have to do is upload an image and click on the areas you want to get the coordinates for.
 
+This tools is the result of a visual project that I once worked on which involved making an svg file interactive and I couldn't be bothered with mapping some interactible components by guessing coordinates for like 50+ components.
+
 ## Getting started
 
 > [!TIP]
