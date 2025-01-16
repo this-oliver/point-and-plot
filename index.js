@@ -1,10 +1,11 @@
 const form = document.getElementById("image-form");
 const formInput = form.querySelector("input[type=file]");
+const formSubmitButton = form.querySelector("button[type=submit]");
 const svg = document.getElementById("svg");
 const svgGroup = document.getElementById("svg-group");
 const coordGroup = document.getElementById("coords");
 const exportButton = document.getElementById("export");
-const resetButton = document.getElementById("reset");
+const resetCanvasButton = document.getElementById("reset-canvas");
 
 let counter = 0;
 let coords = [];
@@ -200,13 +201,12 @@ function handleImageSubmit(e) {
  */
 function handleSubmitButton() {
 	const formHasFile = formInput.files.length > 0;
-	const submitButton = form.querySelector("button[type=submit]");
-	submitButton.disabled = !formHasFile;
+	formSubmitButton.disabled = !formHasFile;
 }
 
 // setup
 exportButton.addEventListener("click", exportCoords);
-resetButton.addEventListener("click", resetCoords);
+resetCanvasButton.addEventListener("click", resetCoords);
 form.addEventListener("submit", handleImageSubmit);
 formInput.addEventListener("change", handleSubmitButton);
 svg.addEventListener("click", processCoords);
