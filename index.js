@@ -69,6 +69,15 @@ function resetCoords() {
 	document.getElementById("count").textContent = counter;
 }
 
+function resetImage() {
+	// hide canvas and show form
+	document.getElementById("canvas").classList.add("hidden");
+	document.getElementById("canvas-form").classList.remove("hidden");
+
+	// activate submit button
+	formSubmitButton.disabled = false;
+}
+
 /**
  * This function creates a circle and text element on the SVG canvas
  * with the given id, x, and y coordinates to represent a pointer.
@@ -206,7 +215,10 @@ function handleSubmitButton() {
 
 // setup
 exportButton.addEventListener("click", exportCoords);
-resetCanvasButton.addEventListener("click", resetCoords);
+resetCanvasButton.addEventListener("click", () => {
+	resetImage();
+	resetCoords();
+});
 form.addEventListener("submit", handleImageSubmit);
 formInput.addEventListener("change", handleSubmitButton);
 svg.addEventListener("click", processCoords);
