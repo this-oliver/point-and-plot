@@ -8,6 +8,7 @@ const resetButton = document.getElementById("reset");
 
 let counter = 0;
 let coords = [];
+let coordSvgElements = [];
 
 /**
  * Adds coordinates to the list and increments the counter.
@@ -15,11 +16,15 @@ let coords = [];
  * @param {number} id - The id of the coordinate.
  * @param {number} x - The x coordinate of the point.
  * @param {number} y - The y coordinate of the point.
+ * @param {Element} circleElement - The circle element representing the point.
+ * @param {Element} textElement - The text element representing the point.
  *
  * @returns {void}
  */
-function addCoords(id, x, y) {
+function addCoords(id, x, y, circleElement, textElement) {
 	coords.push({ id, x, y });
+	coordSvgElements.push(circleElement);
+	coordSvgElements.push(textElement);
 
 	const coordsElement = document.createElement("div");
 	coordsElement.classList.add("p-4", "border", "border-black");
@@ -64,8 +69,8 @@ function exportCoords() {
 function resetCoords() {
 	coords = [];
 	counter = 0;
-	coordGroup.innerHTML = "";
 	document.getElementById("count").textContent = counter;
+	coordSvgElements.forEach((element) => element.remove());
 }
 
 /**
@@ -142,7 +147,7 @@ function processCoords(e) {
 	// wait 3 seconds and then prompt user if they want to add the point
 	setTimeout(() => {
 		if (confirm(`Add point at ${position.x}, ${position.y}?`)) {
-			addCoords(counter, position.x, position.y);
+			addCoords(counter, position.x, position.y, circle, text);
 		} else {
 			circle.remove();
 			text.remove();
